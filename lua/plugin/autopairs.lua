@@ -1,0 +1,25 @@
+local M = {}
+
+M[1] = "windwp/nvim-autopairs"
+
+M.config = function ()
+
+local npairs = require("nvim-autopairs")
+local Rule = require('nvim-autopairs.rule')
+
+npairs.setup({
+    check_ts = true,
+})
+
+local ts_conds = require('nvim-autopairs.ts-conds')
+
+
+npairs.add_rules({
+  Rule("<", ">", "rust")
+    :with_pair(ts_conds.is_not_ts_node({'Conditional'}))
+})
+end
+
+M.dependencies = { "nvim-treesitter/nvim-treesitter" }
+
+return M
