@@ -11,7 +11,12 @@ local on_attach = function(client, bufnr)
 			buffer = bufnr,
 			callback = function()
 				-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-				vim.lsp.buf.format({ async = false })
+				vim.lsp.buf.format({
+					async = false,
+					filter = function(client)
+						return client.name ~= "tsserver"
+					end,
+				})
 			end,
 		})
 	end
@@ -26,6 +31,8 @@ M.config = function()
 				filetypes = {
 					"javascript",
 					"typescript",
+					"javascriptreact",
+					"typescriptreact",
 					"css",
 					"scss",
 					"html",

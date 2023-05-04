@@ -22,43 +22,64 @@ M.config = function()
 	keymap("n", "<leader>dn", "lua vim.diagnostic.goto_next()")
 	keymap("n", "<leader>dp", "lua vim.diagnostic.goto_prev()")
 
-	lsp_zero.set_preferences({ set_lsp_keymaps = false, cmp_capabilities = capabilities})
+	lsp_zero.set_preferences({ set_lsp_keymaps = false, cmp_capabilities = capabilities })
 	lsp_zero.setup_nvim_cmp({
 		mapping = {
-		["<C-up>"] = cmp.mapping.select_prev_item(),
-		["<C-down>"] = cmp.mapping.select_next_item(),
-		-- Add tab support
-		["<S-Tab>"] = cmp.mapping.select_prev_item(),
-		["<Tab>"] = cmp.mapping.select_next_item(),
-		["<S-up>"] = cmp.mapping.scroll_docs(-4),
-		["<S-down>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(),
-		["<C-e>"] = cmp.mapping.close(),
-		["<CR>"] = cmp.mapping.confirm({
-			behavior = cmp.ConfirmBehavior.Insert,
-			select = true,
-			})
+			["<C-up>"] = cmp.mapping.select_prev_item(),
+			["<C-down>"] = cmp.mapping.select_next_item(),
+			-- Add tab support
+			["<S-Tab>"] = cmp.mapping.select_prev_item(),
+			["<Tab>"] = cmp.mapping.select_next_item(),
+			["<S-up>"] = cmp.mapping.scroll_docs(-4),
+			["<S-down>"] = cmp.mapping.scroll_docs(4),
+			["<C-Space>"] = cmp.mapping.complete(),
+			["<C-e>"] = cmp.mapping.close(),
+			["<CR>"] = cmp.mapping.confirm({
+				behavior = cmp.ConfirmBehavior.Insert,
+				select = true,
+			}),
 		},
 		snippet = {
 			expand = function(args)
-				 --require('luasnip').lsp_expand(args.body)
+				--require('luasnip').lsp_expand(args.body)
 				vim.fn["vsnip#anonymous"](args.body)
 			end,
 		},
-
-
 		sources = {
-			{ name = "path", priority = 2 },
+			{ name = "path",     priority = 2 },
 			{ name = "nvim_lsp", priority = 10 },
-			{ name = "vsnip", priority = 10 },
-			{ name = "buffer", keyword_length = 2, priority = 5 },
+			{ name = "vsnip",    priority = 10 },
+			{ name = "buffer",   keyword_length = 2, priority = 5 },
 			--{ name = "luasnip", keyword_length = 2, priority = -1 },
-			{ name = "crates", priority = 11 },
+			{ name = "crates",   priority = 11 },
 		},
-
 	})
-	lsp_zero.ensure_installed ={"tailwindcss", "lua_ls", "tsserver", "rust_analyzer", "cssls","pyright","intelephense", "jsonls", "html","dockerls","docker_compose_language_service","bashls","rnix", "sqlls","taplo","lemminx","yamlls"}
-	Rust_lsp = lsp_zero.build_options("rust_analyzer",{})
+	lsp_zero.ensure_installed = {
+		"tailwindcss",
+		"lua_ls",
+		"rust_analyzer",
+		"cssls",
+		"pyright",
+		"intelephense",
+		"jsonls",
+		"html",
+		"dockerls",
+		"docker_compose_language_service",
+		"bashls",
+		"rnix",
+		"sqlls",
+		"taplo",
+		"lemminx",
+		"yamlls",
+	}
+	lsp_zero.format_on_save({
+		servers = {
+			["lua_ls"] = { "lua" },
+			["rust_analyzer"] = { "rust" },
+			["tailwindcss"] = { "css" },
+		},
+	})
+	Rust_lsp = lsp_zero.build_options("rust_analyzer", {})
 	lsp_zero.setup()
 end
 
@@ -75,6 +96,6 @@ M.dependencies = {
 	"hrsh7th/cmp-buffer",
 	"saadparwaiz1/cmp_luasnip",
 	"hrsh7th/vim-vsnip-integ",
-	"L3MON4D3/LuaSnip"
+	"L3MON4D3/LuaSnip",
 }
 return M
