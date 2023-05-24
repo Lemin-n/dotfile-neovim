@@ -27,19 +27,16 @@ if not keymap_err then
 	return print(keymap_err)
 end
 
-local lazy_plugin
-vim.api.nvim_create_autocmd({ "CursorHold" }, { callback = function()
-
-vim.diagnostic.open_float(nil, {focuseable = false})
-end
-}
-
-)
+vim.api.nvim_create_autocmd({ "CursorHold" }, {
+	callback = function()
+		vim.diagnostic.open_float(nil, { focuseable = false })
+	end,
+})
 require("lazy").setup(plugins, {
 	install = {
-		colorscheme = {"onedark"}
+		colorscheme = { "onedark" },
 	},
 	ui = {
 		border = "rounded",
-	}
+	},
 })

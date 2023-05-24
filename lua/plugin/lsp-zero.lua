@@ -1,9 +1,10 @@
-local keymap = require("utils")
+local keymap = require("utils").keymap
 local M = {}
 M[1] = "VonHeikemen/lsp-zero.nvim"
 M.config = function()
 	local lsp_zero = require("lsp-zero")
 	local cmp = require("cmp")
+	require("copilot_cmp").setup()
 	lsp_zero.preset("recommended")
 	local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -39,6 +40,14 @@ M.config = function()
 				select = true,
 			}),
 		},
+		sorting = {
+			priority_weight = 2,
+			comparators = {
+				cmp.config.compare.exact,
+				cmp.config.compare.kind,
+				cmp.config.compare.recently_used,
+			},
+		},
 		snippet = {
 			expand = function(args)
 				--require('luasnip').lsp_expand(args.body)
@@ -46,12 +55,24 @@ M.config = function()
 			end,
 		},
 		sources = {
-			{ name = "path",     priority = 2 },
+			{ name = "path", priority = 2 },
 			{ name = "nvim_lsp", priority = 10 },
-			{ name = "vsnip",    priority = 10 },
-			{ name = "buffer",   keyword_length = 2, priority = 5 },
+			{ name = "vsnip", priority = 10 },
+			{ name = "copilot", group_index = 11 },
+			{ name = "buffer", keyword_length = 2, priority = 5 },
 			--{ name = "luasnip", keyword_length = 2, priority = -1 },
-			{ name = "crates",   priority = 11 },
+			{ name = "crates", priority = 11 },
+		},
+		formatting = {
+
+			format = require("tailwindcss-colorizer-cmp").formatter,
+		},
+		--configure completion window with transparent selector and border without scroplbar
+		window = {
+			completion = {
+				border = "rounded",
+				winhighlight = "Normal:CmpNormal",
+			},
 		},
 	})
 	lsp_zero.ensure_installed = {
@@ -79,9 +100,17 @@ M.config = function()
 			["tailwindcss"] = { "css" },
 		},
 	})
+
 	Rust_lsp = lsp_zero.build_options("rust_analyzer", {})
+	lsp_zero.configure("tailwindcss", {
+		on_attach = function(_, bufnr)
+			require("tailwindcss-colors").buf_attach(bufnr)
+		end,
+	})
 	lsp_zero.setup()
 end
+
+-- Configure lsp-zero tailwindcss lsp with max completion items
 
 M.dependencies = {
 	--LSP Deps
@@ -89,6 +118,8 @@ M.dependencies = {
 	"williamboman/mason-lspconfig.nvim",
 	"neovim/nvim-lspconfig",
 	--CMP Deps
+	"zbirenbaum/copilot-cmp",
+	"roobert/tailwindcss-colorizer-cmp.nvim",
 	"hrsh7th/nvim-cmp",
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-vsnip",

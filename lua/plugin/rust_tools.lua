@@ -16,8 +16,7 @@ M.config = function()
 		server = Rust_lsp,
 	}
 	require("rust-tools").setup(opts)
-
 end
 
-M.dependencies = {"VonHeikemen/lsp-zero.nvim"}
+M.dependencies = { "VonHeikemen/lsp-zero.nvim" }
 return M

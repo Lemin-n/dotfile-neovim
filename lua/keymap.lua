@@ -1,4 +1,4 @@
-local keymap = require("utils")
+local keymap = require("utils").keymap
 
 keymap("n", "<leader>th", ":botright new <Bar> :terminal")
 keymap("n", "<leader>ts", ":botright vnew <Bar> :terminal")
